@@ -34,10 +34,18 @@ input[type="text"]{
     background-color:rgb(5, 64, 175);
     color: white;
 }
+.btn-blue:hover{
+    background-color:rgb(4, 50, 134);
+
+}
 .btn-gray{
     border: 2px white solid;
     background-color:gray;
     color: white;
+}
+.btn-gray:hover{
+    background-color:rgb(109, 109, 109);
+
 }
 .operation{
     border: 2px #404040 solid;
@@ -45,6 +53,9 @@ input[type="text"]{
     color: #404040;
     border-radius: 10px;
     font-weight: bolder;
+}
+.operation:hover{
+    background-color: rgb(129, 221, 190);
 }    
 
 table{

@@ -30,11 +30,15 @@ function generateTable(){
         props.forEach(prop =>{
             headers.push(newElement('th',[],prop,{scope:"col"}))
         });
-        expr = expr.split(',');
+        // expr = expr.split(',');
+        let binaryTree = new BinaryTree(convertToPostfix(expr));
         // console.log(expr);
-        expr.forEach(elem => {
-            headers.push(newElement('th',[],elem,{scope:"col"}));
+        // expr.forEach(elem => {
+        //     headers.push(newElement('th',[],elem,{scope:"col"}));
 
+        // });
+        binaryTree.getHeaders().forEach(elem =>{
+            headers.push(newElement('th',[],elem,{scope:"col"}));
         });
         let row = newElement('tr', headers)
         let head = newElement('thead',[row]);
@@ -172,7 +176,7 @@ function compute(operator='', operand1=false, operand2=false){
 function convertToPostfix(infixExpression = ''){
     let postfixExpression = [];
     infixExpression = explode(infixExpression);
-    console.log(infixExpression);
+    // console.log(infixExpression);
     let operator = [];
     infixExpression.forEach((element) => {
         if(isOperator(element)){
@@ -194,7 +198,6 @@ function convertToPostfix(infixExpression = ''){
         }
         else if(element==")"){
             while(operator[operator.length-1] !="("){
-                console.log('popping from operator stack: ' + operator[operator.length-1])
                 postfixExpression.push(operator.pop());
             }
             // console.log('popping from operator stack: ' + operator[operator.length-1])
@@ -230,4 +233,120 @@ function explode(expression = ''){
 
 function isOperator(char){
     return Object.values(operators).includes(char);
+}
+
+
+
+
+class BinaryTree{
+    root =  new Node();
+    
+    constructor(postfixExpr=[]){
+        this.root = this.createBinaryTree(postfixExpr);
+    }
+
+    createBinaryTree(postfixExpr){
+        let st = [];
+        let newNode, left, right;
+        
+
+        postfixExpr.forEach( elem => {
+            if (!isOperator(elem)) {
+                newNode = new Node(elem);
+                st.push(newNode);
+            } else {
+                newNode = new Node(elem);
+                if(elem != operators[1]){
+                    right = st.pop();
+                    left = st.pop();
+                    newNode.left = left;
+                    newNode.right = right;
+                }
+                else{
+                    right = st.pop();
+                    newNode.right = right;
+                }
+                st.push(newNode);
+            }
+        });
+            
+        newNode = st[0];
+        
+        return newNode;
+    }
+
+    inOrder(){
+        let str = this.rootInOrder(this.root);
+        return str.substring(1,str.length-2);
+    }
+    rootInOrder(node){
+        if(node == null) return "";
+        if(node.isLeaf())
+            return this.rootInOrder(node.left) + node.value.toString() + "" + this.rootInOrder(node.right);
+        return "(" + this.rootInOrder(node.left) + node.value.toString() + "" + this.rootInOrder(node.right) + ")";
+    }
+
+    rootPostOrder(node){
+        if(node == null) return "";
+        return this.rootPostOrder(node.left) + this.rootPostOrder(node.right)+ node.value.toString() + " ";
+    }
+    postOrder(){
+        return this.rootPostOrder(this.root);
+    }
+    rootPostOrderTraverse(node){
+        if(node == null) return [];
+        return [...this.rootPostOrderTraverse(node.left), ...this.rootPostOrderTraverse(node.right), node];
+    }
+    postOrderTraverse(){
+        return this.rootPostOrderTraverse(this.root);
+    }
+
+    
+    print(){
+        // console.log(this.root.getTreeNotation());
+        console.log(this.postOrder());
+        console.log(this.getHeaders());
+        
+        console.log(this.inOrder());
+    }
+
+    getHeaders(){
+        let headers = [];
+        let nodes = this.postOrderTraverse();
+        nodes.forEach(node => {
+            if(!node.isLeaf()){
+                let str = this.rootInOrder(node);
+                
+                headers.push(str.substring(1,str.length-1));
+            }
+        });
+        return headers;
+    }
+}
+
+
+class Node{
+    value = '';
+    left = null;
+    right = null;
+    constructor(val=''){
+        this.value = val;
+    }
+    getTreeNotation(){
+        let ret = this.value.toString();
+        if(this.isLeaf()) return ret;
+        
+        ret += "{";
+        if(this.left != null){
+            ret += this.left.getTreeNotation();
+            if(this.right != null) ret += ",";
+        }
+        if(this.right != null) ret += this.right.getTreeNotation();
+        ret += "}";
+        
+        return ret;
+    }
+    isLeaf(){
+        return this.right == null && this.left == null;
+    }   
 }
