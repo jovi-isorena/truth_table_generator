@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth Table Generator</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="truth_table_icon.png">
+</head>
+<body>
+    <div class="container">
+        <h1>Truth Table Generator</h1>
+        <label for="">Enter expression</label>
+        <br>
+        <input type="text" id="txtExpression" value="~(p^q)">
+        <br>
+        <label class="muted">Separate expressions with comma</label>
+        <br>
+        <div class="w-100" style="margin-top: 20px;">
+            <button class="btn operation">~</button>
+            <button class="btn operation">^</button>
+            <button class="btn operation">ⱽ</button>
+            <button class="btn operation">→</button>
+            <button class="btn operation">↔</button>
+            
+        </div>
+        <div class="w-100" style="margin-top: 20px;">
+            <button id="generate" class="btn btn-blue">Generate Table</button>
+            <button id="clear" class="btn btn-gray">Clear Expression</button>
+
+        </div>
+        <div id="table">
+
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
